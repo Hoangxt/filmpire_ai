@@ -3,10 +3,8 @@ import React, { useState, useEffect } from "react";
 import { TextField, InputAdornment } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 // redux-search
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { searchMovie } from "../../features/currentGenreOrCategory";
-// router
-import { useLocation } from "react-router-dom";
 
 import useStyles from "./styles";
 
@@ -29,7 +27,7 @@ const Search = () => {
         onChange={(e) => setQuery(e.target.value)}
         variant="standard"
         InputProps={{
-          className: classes.searchInput,
+          className: classes.input,
           startAdornment: (
             <InputAdornment position="start">
               <SearchIcon />

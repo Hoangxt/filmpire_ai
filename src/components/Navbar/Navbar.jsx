@@ -16,19 +16,56 @@ import {
 } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
-
+// redux
+import { useDispatch, useSelector } from "react-redux";
+// search
 import { Sidebar, Search } from "..";
-
+// authenticate
+import { fetchToken, moviesApi, createSessionId } from "../../utils";
+// slice
+import { setUser } from "../../features/auth";
+// styles css
 import useStyles from "./styles";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  // hooks
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const classes = useStyles();
   const isMobile = useMediaQuery("(max-width: 600px)");
   const theme = useTheme();
-  const isAuthenticated = true;
+  // authenticate
+  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const token = localStorage.getItem("request_token");
+  const sessionIidFromLocalStorage = localStorage.getItem("session_id");
+
+  console.log("user", user);
+
+  useEffect(() => {
+    const logInUser = async () => {
+      if (token) {
+        if (sessionIidFromLocalStorage) {
+          // if session id is in local storage
+          const { data: userData } = await moviesApi.get(
+            `/account?session_id=${sessionIidFromLocalStorage}`
+          );
+          dispatch(setUser(userData));
+        } else {
+          // if session id is not in local storage
+          const sessionId = await createSessionId(); // create session id
+          const { data: userData } = await moviesApi.get(
+            // get user data
+            `/account?session_id=${sessionId}`
+          );
+          dispatch(setUser(userData)); // set user data in redux
+        }
+      }
+    };
+
+    logInUser();
+  }, [token]); // if token is changed
+
   return (
     <>
       <AppBar position="fixed">
@@ -50,14 +87,14 @@ const Navbar = () => {
           {!isMobile && <Search />}
           <div>
             {!isAuthenticated ? (
-              <Button color="inherit">
+              <Button color="inherit" onClick={fetchToken}>
                 Login &nbsp; <AccountCircle />
               </Button>
             ) : (
               <Button
                 color="inherit"
                 component={Link}
-                to={"/profile/:id"}
+                to={`/profile/${user.id}`}
                 className={classes.linkButton}
               >
                 {!isMobile && <>My Movies &nbsp;</>}
