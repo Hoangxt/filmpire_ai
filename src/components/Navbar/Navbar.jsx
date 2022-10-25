@@ -18,9 +18,13 @@ import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 // import { useDispatch, useSelector } from "react-redux";
 
+import { Sidebar } from "..";
+
 import useStyles from "./styles";
 
 const Navbar = () => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const classes = useStyles();
   const isMobile = useMediaQuery("(max-width: 600px)");
   const theme = useTheme();
@@ -35,6 +39,7 @@ const Navbar = () => {
               color="inherit"
               style={{ outline: "none" }}
               className={classes.menuButton}
+              onClick={() => setMobileOpen(true)}
             >
               <Menu />
             </IconButton>
@@ -67,6 +72,31 @@ const Navbar = () => {
           {isMobile && "Search..."}
         </Toolbar>
       </AppBar>
+      {/* sidebar  */}
+      <div>
+        <nav className={classes.drawer}>
+          {isMobile ? (
+            <Drawer
+              variant="temporary"
+              anchor="right"
+              open={mobileOpen}
+              classes={{ paper: classes.drawerPaper }}
+              ModalProps={{ keepMounted: true }}
+              onClose={() => setMobileOpen(false)}
+            >
+              <Sidebar setMobileOpen={setMobileOpen} />
+            </Drawer>
+          ) : (
+            <Drawer
+              classes={{ paper: classes.drawerPaper }}
+              variant="permanent"
+              open
+            >
+              <Sidebar setMobileOpen={setMobileOpen} />
+            </Drawer>
+          )}
+        </nav>
+      </div>
     </>
   );
 };
