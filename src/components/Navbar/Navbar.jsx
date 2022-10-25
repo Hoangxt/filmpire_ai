@@ -18,7 +18,7 @@ import { useTheme } from "@mui/material/styles";
 import { Link } from "react-router-dom";
 // import { useDispatch, useSelector } from "react-redux";
 
-import { Sidebar } from "..";
+import { Sidebar, Search } from "..";
 
 import useStyles from "./styles";
 
@@ -69,7 +69,7 @@ const Navbar = () => {
               </Button>
             )}
           </div>
-          {isMobile && "Search..."}
+          {isMobile && <Search />}
         </Toolbar>
       </AppBar>
       {/* sidebar  */}

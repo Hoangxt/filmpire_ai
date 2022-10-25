@@ -46,6 +46,11 @@ const Sidebar = ({ setMobileOpen }) => {
   const { data, isFetching } = useGetGenresQuery();
   // redux slice sent or transform
   const dispatch = useDispatch();
+  const { genreIdOrCategoryName } = useSelector(
+    (state) => state.currentGenreOrCategory
+  );
+
+  // console.log(genreIdOrCategoryName);
 
   return (
     <>
