@@ -20,6 +20,7 @@ import {
   Remove,
   ArrowBack,
   FavoriteBorderOutlined,
+  Theaters,
 } from "@mui/icons-material";
 // router  [useParams to get the id of the movie]
 import { Link, useParams } from "react-router-dom";
@@ -42,6 +43,13 @@ const MovieInfo = () => {
   const { data, isFetching, error } = useGetMovieQuery(id); // get the movie data
 
   const dispatch = useDispatch(); // dispatch the action
+
+  const isMovieFavortied = false;
+  const isMovieWatchlisted = false;
+
+  const addToFavorites = () => {};
+
+  const addToWatchlist = () => {};
 
   if (isFetching) {
     return (
@@ -114,6 +122,113 @@ const MovieInfo = () => {
               </Typography>
             </Link>
           ))}
+        </Grid>
+        {/* overview */}
+        <Typography variant="h5" gutterBottom style={{ marginTop: "10px" }}>
+          Overview
+        </Typography>
+        <Typography variant="body1" gutterBottom>
+          {data?.overview}
+        </Typography>
+        {/* Top Cast */}
+        <Typography variant="h5" gutterBottom>
+          Top Cast
+        </Typography>
+        {/* Grid character */}
+        <Grid item container spacing={2}>
+          {data &&
+            data.credits?.cast
+              ?.map(
+                (character, i) =>
+                  character.profile_path && (
+                    <Grid
+                      key={i}
+                      item
+                      sx={4}
+                      md={2}
+                      component={Link}
+                      to={`/actors/${character.id}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <img
+                        className={classes.castImage}
+                        src={`http://image.tmdb.org/t/p/w500${character.profile_path}`}
+                        alt={character.name}
+                      />
+                      <Typography color="textPrimary">
+                        {character?.name}
+                      </Typography>
+                      <Typography color="textSecondary">
+                        {character?.character.split("/"[0])}
+                      </Typography>
+                    </Grid>
+                  )
+              )
+              .slice(0, 6)}
+        </Grid>
+        {/*  */}
+        <Grid item container style={{ marginTop: "2rem" }}>
+          <div className={classes.buttonContainer}>
+            <Grid item sx={12} sm={6} className={classes.buttonContainer}>
+              <ButtonGroup size="small" variant="outlined">
+                <Button
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={data?.homepage}
+                  endIcon={<Language />}
+                >
+                  Website
+                </Button>
+                <Button
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`http://www.imdb.com/title/${data?.imdb_id}`}
+                  endIcon={<MovieIcon />}
+                >
+                  IMDB
+                </Button>
+                <Button href="#" endIcon={<Theaters />}>
+                  Trailer
+                </Button>
+              </ButtonGroup>
+            </Grid>
+            {/*  */}
+            <Grid item sx={12} sm={6} className={classes.buttonContainer}>
+              <ButtonGroup size="small" variant="outlined">
+                <Button
+                  onClick={addToFavorites}
+                  endIcon={
+                    isMovieFavortied ? <FavoriteBorderOutlined /> : <Favorite />
+                  }
+                >
+                  {isMovieFavortied ? "Unfavorite" : "Favorite"}
+                </Button>
+                <Button
+                  onClick={addToWatchlist}
+                  endIcon={isMovieWatchlisted ? <Remove /> : <PlusOne />}
+                >
+                  {/* {isMovieWatchlisted
+                    ? "Remove from Watchlist"
+                    : "Add to Watchlist"} */}
+                  Watchlist
+                </Button>
+                <Button
+                  endIcon={<ArrowBack />}
+                  sx={{ borderColor: "primary.main" }}
+                >
+                  <Typography
+                    style={{ textDecoration: "none" }}
+                    component={Link}
+                    to="/"
+                    color="inherit"
+                    variant="subtitle2"
+                  >
+                    Back
+                  </Typography>
+                </Button>
+              </ButtonGroup>
+            </Grid>
+          </div>
         </Grid>
       </Grid>
     </Grid>
