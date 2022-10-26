@@ -85,6 +85,7 @@ const Navbar = () => {
             {theme.palette.mode === "dark" ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
           {!isMobile && <Search />}
+          {/* Authenticate */}
           <div>
             {!isAuthenticated ? (
               <Button color="inherit" onClick={fetchToken}>
