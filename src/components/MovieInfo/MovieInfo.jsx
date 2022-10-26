@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // mui
 import {
   Box,
@@ -51,7 +51,8 @@ const MovieInfo = () => {
   // recommended movies
   const { data: recommendedMovies, isFetching: isFetchingRecommendedMovies } =
     useGetRecommendationsQuery({ list: "recommendations", movie_id: id });
-
+  // state
+  const [openModal, setOpenModal] = useState(false); // for trailer
   const isMovieFavortied = false;
   const isMovieWatchlisted = false;
 
@@ -195,7 +196,11 @@ const MovieInfo = () => {
                 >
                   IMDB
                 </Button>
-                <Button href="#" endIcon={<Theaters />}>
+                <Button
+                  onClick={() => setOpenModal(true)}
+                  href="#"
+                  endIcon={<Theaters />}
+                >
                   Trailer
                 </Button>
               </ButtonGroup>
@@ -251,6 +256,24 @@ const MovieInfo = () => {
           <Box>Sorry, nothing was found. </Box>
         )}
       </Box>
+      {/* Movie Trailer */}
+      <Modal
+        closeAfterTransition
+        className={classes.modal}
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+      >
+        {data?.videos?.results?.length > 0 && (
+          <iframe
+            autoPlay
+            className={classes.video}
+            frameBorder="0"
+            title="Trailer"
+            src={`https://www.youtube.com/embed/${data.videos.results[0].key}`}
+            allow="autoPlay"
+          />
+        )}
+      </Modal>
     </Grid>
   );
 };
