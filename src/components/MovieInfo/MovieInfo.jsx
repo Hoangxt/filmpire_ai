@@ -22,6 +22,7 @@ import {
   FavoriteBorderOutlined,
   Theaters,
 } from "@mui/icons-material";
+import { MovieList } from "..";
 // router  [useParams to get the id of the movie]
 import { Link, useParams } from "react-router-dom";
 // redux
@@ -30,8 +31,12 @@ import { selectGenreOrCategory } from "../../features/currentGenreOrCategory";
 
 // axios
 import axios from "axios";
-// get id from services
-import { useGetMovieQuery } from "../../services/TMDB";
+// get id from services , recommended movies
+import {
+  useGetMovieQuery,
+  useGetRecommendationsQuery,
+} from "../../services/TMDB";
+
 // styles css
 import useStyles from "./styles";
 // icons
@@ -43,6 +48,9 @@ const MovieInfo = () => {
   const { data, isFetching, error } = useGetMovieQuery(id); // get the movie data
 
   const dispatch = useDispatch(); // dispatch the action
+  // recommended movies
+  const { data: recommendedMovies, isFetching: isFetchingRecommendedMovies } =
+    useGetRecommendationsQuery({ list: "recommendations", movie_id: id });
 
   const isMovieFavortied = false;
   const isMovieWatchlisted = false;
@@ -231,6 +239,18 @@ const MovieInfo = () => {
           </div>
         </Grid>
       </Grid>
+      {/* Recommendation */}
+      <Box marginTop="5rem" width="100%">
+        <Typography variant="h3" align="center" gutterBottom>
+          You might also like
+        </Typography>
+        {/* Loop through the recommended movie... */}
+        {recommendedMovies ? (
+          <MovieList movies={recommendedMovies} numberOfMovies={12} />
+        ) : (
+          <Box>Sorry, nothing was found. </Box>
+        )}
+      </Box>
     </Grid>
   );
 };
