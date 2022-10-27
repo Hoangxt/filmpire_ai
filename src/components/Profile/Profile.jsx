@@ -20,7 +20,7 @@ const Profile = () => {
     <Box>
       <Box display="flex" justifyContent="space-between">
         <Typography variant="h4" gutterBottom>
-          My Profile
+          My Profile | my sessionid is: {localStorage.getItem("session_id")}
         </Typography>
         <Button color="inherit" onClick={logout}>
           Logout &nbsp;

@@ -40,8 +40,6 @@ const Navbar = () => {
   const token = localStorage.getItem("request_token");
   const sessionIidFromLocalStorage = localStorage.getItem("session_id");
 
-  console.log("user", user);
-
   useEffect(() => {
     const logInUser = async () => {
       if (token) {
@@ -65,6 +63,8 @@ const Navbar = () => {
 
     logInUser();
   }, [token]); // if token is changed
+
+  // console.log("session_id from navbar", sessionIidFromLocalStorage);
 
   return (
     <>

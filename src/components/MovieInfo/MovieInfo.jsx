@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // mui
 import {
   Box,
@@ -6,7 +6,6 @@ import {
   Typography,
   Grid,
   CircularProgress,
-  useMediaQuery,
   Rating,
   ButtonGroup,
   Modal,
@@ -34,6 +33,7 @@ import axios from "axios";
 import {
   useGetMovieQuery,
   useGetRecommendationsQuery,
+  useGetListQuery,
 } from "../../services/TMDB";
 
 // styles css
@@ -43,21 +43,80 @@ import genreIcons from "../../assets/genres";
 
 const MovieInfo = () => {
   const classes = useStyles();
+  const dispatch = useDispatch(); // dispatch the action
+  const { user } = useSelector((state) => state.user);
   const { id } = useParams(); // get the movie id
+  // state
+
+  const [openModal, setOpenModal] = useState(false); // for trailer
+
+  const [isMovieFavorited, setIsMovieFavorited] = useState(false); // for favorite
+
+  const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(false);
+
   const { data, isFetching, error } = useGetMovieQuery(id); // get the movie data
 
-  const dispatch = useDispatch(); // dispatch the action
   // recommended movies
-  const { data: recommendedMovies, isFetching: isFetchingRecommendedMovies } =
-    useGetRecommendationsQuery({ list: "recommendations", movie_id: id });
-  // state
-  const [openModal, setOpenModal] = useState(false); // for trailer
-  const isMovieFavortied = false;
-  const isMovieWatchlisted = false;
+  const { data: recommendedMovies } = useGetRecommendationsQuery({
+    list: "recommendations",
+    movie_id: id,
+  });
+  const { data: favoriteMovies } = useGetListQuery({
+    listName: "favorite/movies",
+    accountId: user?.id,
+    sessionId: localStorage.getItem("session_id"),
+    page: 1,
+  });
+  const { data: watchlistMovies } = useGetListQuery({
+    listName: "watchlist/movies",
+    accountId: user?.id,
+    sessionId: localStorage.getItem("session_id"),
+    page: 1,
+  });
 
-  const addToFavorites = () => {};
+  useEffect(() => {
+    setIsMovieFavorited(
+      !!favoriteMovies?.results?.find((movie) => movie?.id === data?.id)
+    );
+  }, [favoriteMovies, data]);
+  useEffect(() => {
+    setIsMovieWatchlisted(
+      !!watchlistMovies?.results?.find((movie) => movie?.id === data?.id)
+    );
+  }, [watchlistMovies, data]);
+  // console.log(
+  //   "user session_id in movie info",
+  //   localStorage.getItem("session_id")
+  // );
+  const addToFavorites = async () => {
+    await axios.post(
+      `https://api.themoviedb.org/3/account/${user.id}/favorite?api_key=${
+        process.env.REACT_APP_TMDB_KEY
+      }&session_id=${localStorage.getItem("session_id")}`,
+      {
+        media_type: "movie",
+        media_id: id,
+        favorite: !isMovieFavorited,
+      }
+    );
 
-  const addToWatchlist = () => {};
+    setIsMovieFavorited((prev) => !prev);
+  };
+
+  const addToWatchList = async () => {
+    await axios.post(
+      `https://api.themoviedb.org/3/account/${user.id}/watchlist?api_key=${
+        process.env.REACT_APP_TMDB_KEY
+      }&session_id=${localStorage.getItem("session_id")}`,
+      {
+        media_type: "movie",
+        media_id: id,
+        watchlist: !isMovieWatchlisted,
+      }
+    );
+
+    setIsMovieWatchlisted((prev) => !prev);
+  };
 
   if (isFetching) {
     return (
@@ -211,18 +270,15 @@ const MovieInfo = () => {
                 <Button
                   onClick={addToFavorites}
                   endIcon={
-                    isMovieFavortied ? <FavoriteBorderOutlined /> : <Favorite />
+                    isMovieFavorited ? <FavoriteBorderOutlined /> : <Favorite />
                   }
                 >
-                  {isMovieFavortied ? "Unfavorite" : "Favorite"}
+                  {isMovieFavorited ? "Unfavorite" : "Favorite"}
                 </Button>
                 <Button
-                  onClick={addToWatchlist}
+                  onClick={addToWatchList}
                   endIcon={isMovieWatchlisted ? <Remove /> : <PlusOne />}
                 >
-                  {/* {isMovieWatchlisted
-                    ? "Remove from Watchlist"
-                    : "Add to Watchlist"} */}
                   Watchlist
                 </Button>
                 <Button
