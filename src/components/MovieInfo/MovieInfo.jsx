@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import {
   Movie as MovieIcon,
-  Theater,
   Language,
   PlusOne,
   Favorite,
