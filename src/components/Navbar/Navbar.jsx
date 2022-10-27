@@ -66,10 +66,11 @@ const Navbar = () => {
     };
 
     logInUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]); // if token is changed
 
   // console.log("session_id from navbar", sessionIidFromLocalStorage);
-
+  // console.log("user avatar", user?.avatar?.tmdb?.avatar_path);
   return (
     <>
       <AppBar position="fixed">
@@ -110,7 +111,7 @@ const Navbar = () => {
                 <Avatar
                   style={{ width: 30, height: 30 }}
                   alt="Profile"
-                  src={`https://www.themoviedb.org/t/p/w64_and_h64_face${user?.avatar?.tmdb?.avatar?.avatar_path}`}
+                  src={`https://www.themoviedb.org/t/p/w64_and_h64_face${user?.avatar?.tmdb?.avatar_path}`}
                 />
               </Button>
             )}

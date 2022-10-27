@@ -55,6 +55,7 @@ const Sidebar = ({ setMobileOpen }) => {
   // close menu when click some category on mobile devices
   useEffect(() => {
     setMobileOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [genreIdOrCategoryName]);
 
   return (
