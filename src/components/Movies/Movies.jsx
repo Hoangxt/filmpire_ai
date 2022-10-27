@@ -26,6 +26,10 @@ const Movies = () => {
     searchQuery,
   });
 
+  // fix display movies
+  const lg = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+  const numberOfMovies = lg ? 18 : 20;
+
   if (isFetching) {
     return (
       <Box display="flex" justifyContent="center">
@@ -46,7 +50,7 @@ const Movies = () => {
 
   return (
     <div>
-      <MovieList movies={data} />
+      <MovieList movies={data} numberOfMovies={numberOfMovies} />
       <Pagination
         currentPage={page}
         setPage={setPage}

@@ -13,3 +13,5 @@ them provider
 1. click login in navbar (fetchToken) -> utils -> fetchToken (login) -> store token in local storage -> redirect to home page
 
 # movie information
+
+# fix movies

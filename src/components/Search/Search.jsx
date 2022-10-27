@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 // mui
 import { TextField, InputAdornment } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
@@ -13,6 +13,7 @@ const Search = () => {
   const [query, setQuery] = useState("");
   // redux
   const dispatch = useDispatch();
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       dispatch(searchMovie(query));
