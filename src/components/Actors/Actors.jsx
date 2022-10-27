@@ -14,7 +14,7 @@ import {
 } from "../../services/TMDB";
 // css
 import useStyles from "./styles";
-import { MovieList } from "..";
+import { MovieList, Pagination } from "..";
 
 const Actors = () => {
   const classes = useStyles();
@@ -107,6 +107,11 @@ const Actors = () => {
             Movies
           </Typography>
           {movies && <MovieList movies={movies} numberOfMovies={12} />}
+          <Pagination
+            currentPage={page}
+            setPage={setPage}
+            totalPages={movies?.total_pages}
+          />
         </Box>
       </Grid>
     </>
