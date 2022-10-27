@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Divider,
   List,
@@ -51,6 +51,11 @@ const Sidebar = ({ setMobileOpen }) => {
   );
 
   // console.log(genreIdOrCategoryName);
+
+  // close menu when click some category on mobile devices
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [genreIdOrCategoryName]);
 
   return (
     <>
