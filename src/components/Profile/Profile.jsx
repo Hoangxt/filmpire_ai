@@ -30,7 +30,7 @@ const Profile = () => {
   useEffect(() => {
     refetchFavorites();
     refetchWatchlisted();
-  }, []);
+  }, [refetchFavorites, refetchWatchlisted]);
   // logout function
   const logout = () => {
     localStorage.clear();

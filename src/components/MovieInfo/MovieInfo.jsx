@@ -166,8 +166,7 @@ const MovieInfo = () => {
             </Typography>
           </Box>
           <Typography variant="h6" align="center" gutterBottom>
-            {data?.runtime} min | Language:{" "}
-            {data?.spoken_languages[0].english_name}
+            {data?.runtime}min
           </Typography>
         </Grid>
         {/* genres */}
